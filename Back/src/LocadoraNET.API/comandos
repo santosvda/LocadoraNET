@@ -1,0 +1,2 @@
+--insall EF Core
+dotnet tool install --global dotnet-ef --version 5.0.4
