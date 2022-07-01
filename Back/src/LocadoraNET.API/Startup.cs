@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using LocadoraNET.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocadoraNET.API
 {
@@ -26,6 +30,16 @@ namespace LocadoraNET.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddDbContext<LocadoraNetContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString(Configuration["Database:DefaultConnection"]), new MySqlServerVersion(new Version()), x =>
+                {
+                    x.MigrationsHistoryTable("EfMigrations");
+                    x.MigrationsAssembly(migrationsAssembly);
+                });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -44,14 +58,26 @@ namespace LocadoraNET.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LocadoraNET.API v1"));
             }
 
+            InitializeDatabase(app);
+            
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var locadoraDbContext = serviceScope.ServiceProvider.GetRequiredService<LocadoraNetContext>();
+                locadoraDbContext.Database.Migrate();
+            }
         }
     }
 }
