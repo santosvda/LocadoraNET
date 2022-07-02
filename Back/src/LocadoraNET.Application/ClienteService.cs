@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using LocadoraNET.Application.Contracts;
+using LocadoraNET.Application.Dtos;
 using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Contracts;
 
@@ -10,22 +12,26 @@ namespace LocadoraNET.Application
     {
         private readonly IGeneralPersist _generalPersist;
         private readonly IClientePersist _clientePersist;
+        private readonly IMapper _mapper;
 
-        public ClienteService(IGeneralPersist generalPersist, IClientePersist clientePersist)
+        public ClienteService(IGeneralPersist generalPersist, IClientePersist clientePersist, IMapper mapper)
         {
             _generalPersist = generalPersist;
             _clientePersist = clientePersist;
+            _mapper = mapper;
         }
-        public async Task<Cliente> AddCliente(Cliente model)
+        public async Task<ClienteDto> AddCliente(ClienteDto model)
         {
             try
             {
-                _generalPersist.Add<Cliente>(model);
+                var cliente = _mapper.Map<Cliente>(model);
+                _generalPersist.Add<Cliente>(cliente);
 
-                if(await _generalPersist.SaveChangesAsync())
-                    return await _clientePersist.GetClienteById(model.Id);
-
-                return null;
+                if(!await _generalPersist.SaveChangesAsync())
+                    return null;
+                    
+                var result = await _clientePersist.GetClienteById(cliente.Id);
+                return _mapper.Map<ClienteDto>(result);
             }
             catch (Exception ex)
             {
@@ -33,22 +39,23 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Cliente> UpdateCliente(int clienteId, Cliente model)
+        public async Task<ClienteDto> UpdateCliente(int clienteId, ClienteDto model)
         {
             try
             {
                 var cliente = await _clientePersist.GetClienteById(clienteId);
-                
                 if(cliente == null) return null;
 
                 model.Id = cliente.Id;
+                _mapper.Map(model, cliente);
+                _generalPersist.Update<Cliente>(cliente);
 
-                _generalPersist.Update(model);
+                if(!await _generalPersist.SaveChangesAsync())
+                    return null;
+                    
+                var result = await _clientePersist.GetClienteById(cliente.Id);
+                return _mapper.Map<ClienteDto>(result);
 
-                if(await _generalPersist.SaveChangesAsync())
-                    return await _clientePersist.GetClienteById(model.Id);
-
-                return null;
             }
             catch (Exception ex)
             {
@@ -74,14 +81,14 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Cliente[]> GetAllClientes(bool includeLocacao = false)
+        public async Task<ClienteDto[]> GetAllClientes(bool includeLocacao = false)
         {
             try
             {
                 var clientes = await _clientePersist.GetAllClientes();
                 if(clientes == null) return null;
 
-                return clientes;
+                return _mapper.Map<ClienteDto[]>(clientes);
             }
             catch (Exception ex)
             {
@@ -89,14 +96,14 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Cliente> GetClienteById(int clienteId, bool includeLocacao = false)
+        public async Task<ClienteDto> GetClienteById(int clienteId, bool includeLocacao = false)
         {
             try
             {
                 var cliente = await _clientePersist.GetClienteById(clienteId);
                 if(cliente == null) return null;
 
-                return cliente;
+                return _mapper.Map<ClienteDto>(cliente);
             }
             catch (Exception ex)
             {

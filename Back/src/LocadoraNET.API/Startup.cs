@@ -42,6 +42,8 @@ namespace LocadoraNET.API
                     .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = 
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IGeneralPersist, GeneralPersist>();

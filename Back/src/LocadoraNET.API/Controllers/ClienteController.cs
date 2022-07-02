@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using LocadoraNET.Application.Contracts;
+using LocadoraNET.Application.Dtos;
 using LocadoraNET.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace LocadoraNET.API.Controllers
             try
             {
                 var clientes = await _clienteService.GetAllClientes();
-                if(clientes == null) return NotFound("No 'Clientes' found");
+                if(clientes == null) return NoContent();
 
                 return Ok(clientes);
             }
@@ -42,7 +42,7 @@ namespace LocadoraNET.API.Controllers
             try
             {
                 var cliente = await _clienteService.GetClienteById(clienteId);
-                if(cliente == null) return NotFound("No 'Clientes' found");
+                if(cliente == null) return NoContent();
 
                 return Ok(cliente);
             }
@@ -54,14 +54,14 @@ namespace LocadoraNET.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCliente(Cliente model)
+        public async Task<IActionResult> AddCliente(ClienteDto model)
         {
             try
             {
                 var cliente = await _clienteService.AddCliente(model);
                 if(cliente == null) return BadRequest("Failure to save 'Cliente'");
 
-                return Ok("Registered");
+                return Ok(cliente);
             }
             catch (Exception ex)
             {
@@ -75,7 +75,10 @@ namespace LocadoraNET.API.Controllers
         {
             try
             {
-                return await _clienteService.DeleteCliente(clienteId) ? Ok("Deleted") : BadRequest("Failure to delete 'Cliente'");
+                var cliente = await _clienteService.GetClienteById(clienteId);
+                if(cliente == null) return NoContent();
+
+                return await _clienteService.DeleteCliente(clienteId) ? Ok("Deleted") : throw new Exception("Failure to delete 'Cliente'");
             }
             catch (Exception ex)
             {
@@ -85,7 +88,7 @@ namespace LocadoraNET.API.Controllers
         }
 
         [HttpPut("{clienteId}")]
-        public async Task<IActionResult> UpdateCliente(int clienteId, Cliente model)
+        public async Task<IActionResult> UpdateCliente(int clienteId, ClienteDto model)
         {
             try
             {

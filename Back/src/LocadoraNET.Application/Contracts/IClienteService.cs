@@ -1,15 +1,15 @@
 using System.Threading.Tasks;
-using LocadoraNET.Domain;
+using LocadoraNET.Application.Dtos;
 
 namespace LocadoraNET.Application.Contracts
 {
     public interface IClienteService
     {
-        Task<Cliente> AddCliente(Cliente model);
-        Task<Cliente> UpdateCliente(int ClienteId, Cliente model);
+        Task<ClienteDto> AddCliente(ClienteDto model);
+        Task<ClienteDto> UpdateCliente(int ClienteId, ClienteDto model);
         Task<bool> DeleteCliente(int ClienteId);
 
-        Task<Cliente[]> GetAllClientes(bool includeLocacao = false);
-        Task<Cliente> GetClienteById(int ClienteId, bool includeLocacao = false);
+        Task<ClienteDto[]> GetAllClientes(bool includeLocacao = false);
+        Task<ClienteDto> GetClienteById(int ClienteId, bool includeLocacao = false);
     }
 }
