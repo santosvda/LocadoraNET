@@ -61,7 +61,7 @@ namespace LocadoraNET.API.Controllers
                 var cliente = await _clienteService.AddCliente(model);
                 if(cliente == null) return BadRequest("Failure to save 'Cliente'");
 
-                return Ok(cliente);
+                return Ok("Registered");
             }
             catch (Exception ex)
             {
@@ -75,9 +75,7 @@ namespace LocadoraNET.API.Controllers
         {
             try
             {
-                if(await _clienteService.DeleteCliente(clienteId)) return BadRequest("Failure to delete 'Cliente'");
-
-                return Ok();
+                return await _clienteService.DeleteCliente(clienteId) ? Ok("Deleted") : BadRequest("Failure to delete 'Cliente'");
             }
             catch (Exception ex)
             {
@@ -87,7 +85,7 @@ namespace LocadoraNET.API.Controllers
         }
 
         [HttpPut("{clienteId}")]
-        public async Task<IActionResult> Get(int clienteId, Cliente model)
+        public async Task<IActionResult> UpdateCliente(int clienteId, Cliente model)
         {
             try
             {

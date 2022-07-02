@@ -1,5 +1,5 @@
 --Add migration
-dotnet ef migrations add Migration01 --context LocadoraNET.Persistence.Contextos.LocadoraNetcontext -o Migrations
+dotnet ef migrations add Migration01 --context LocadoraNET.Persistence.Contexts.LocadoraNetcontext -o Migrations
 
 dotnet new sln -n LocadoraNET
 dotnet new classlib -n LocadoraNET.Application

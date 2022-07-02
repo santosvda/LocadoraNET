@@ -37,7 +37,7 @@ namespace LocadoraNET.Application
         {
             try
             {
-                var cliente = _clientePersist.GetClienteById(clienteId);
+                var cliente = await _clientePersist.GetClienteById(clienteId);
                 
                 if(cliente == null) return null;
 

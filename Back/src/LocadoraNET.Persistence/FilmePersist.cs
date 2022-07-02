@@ -24,7 +24,7 @@ namespace LocadoraNET.Persistence
                         .Include(f => f.Locacoes)
                         .ThenInclude(c => c.Cliente);
 
-            query.OrderBy(f => f.Id);
+            query = query.AsNoTracking().OrderBy(f => f.Id);
 
             return await query.ToArrayAsync();
         }
@@ -37,7 +37,7 @@ namespace LocadoraNET.Persistence
                     .Include(f => f.Locacoes)
                     .ThenInclude(c => c.Cliente);
 
-            query.OrderBy(f => f.Id).Where(f => f.Id == FilmeId);
+            query = query.AsNoTracking().OrderBy(f => f.Id).Where(f => f.Id == FilmeId);
 
             return await query.FirstOrDefaultAsync();
         }

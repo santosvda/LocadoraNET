@@ -23,7 +23,7 @@ namespace LocadoraNET.Application
                 _generalPersist.Add<Filme>(model);
 
                 if(await _generalPersist.SaveChangesAsync())
-                    return await _filmePersist.GetFilmeById(model.Id);
+                    return model;
 
                 return null;
             }
@@ -37,7 +37,7 @@ namespace LocadoraNET.Application
         {
             try
             {
-                var filme = _filmePersist.GetFilmeById(FilmeId);
+                var filme = await _filmePersist.GetFilmeById(FilmeId);
                 
                 if(filme == null) return null;
 

@@ -21,7 +21,7 @@ namespace LocadoraNET.Persistence
             .Include(l => l.Cliente)
             .Include(l => l.Filme);
 
-            query.OrderBy(c => c.Id);
+            query = query.AsNoTracking().OrderBy(c => c.Id);
 
             return await query.ToArrayAsync();
         }
@@ -31,7 +31,7 @@ namespace LocadoraNET.Persistence
             .Include(l => l.Cliente)
             .Include(l => l.Filme);
 
-            query.OrderBy(c => c.Id).Where(c => c.ClienteId == ClienteId);
+            query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.ClienteId == ClienteId);
 
             return await query.ToArrayAsync();
         }
@@ -41,7 +41,7 @@ namespace LocadoraNET.Persistence
             .Include(l => l.Cliente)
             .Include(l => l.Filme);
 
-            query.OrderBy(c => c.Id).Where(c => c.FilmeId == FilmeId);
+            query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.FilmeId == FilmeId);
 
             return await query.ToArrayAsync();
         }
@@ -51,7 +51,7 @@ namespace LocadoraNET.Persistence
             .Include(l => l.Cliente)
             .Include(l => l.Filme);
 
-            query.OrderBy(c => c.Id).Where(c => c.Id == LocacaoId);
+            query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.Id == LocacaoId);
 
             return await query.FirstOrDefaultAsync();
         }

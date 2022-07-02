@@ -8,6 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using LocadoraNET.Persistence.Contexts;
+using LocadoraNET.Application.Contracts;
+using LocadoraNET.Application;
+using LocadoraNET.Persistence.Contracts;
+using LocadoraNET.Persistence;
 
 namespace LocadoraNET.API
 {
@@ -34,7 +38,15 @@ namespace LocadoraNET.API
                 });
             });
 
-            services.AddControllers();
+             services.AddControllers()
+                    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = 
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
+
+            services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IGeneralPersist, GeneralPersist>();
+            services.AddScoped<IClientePersist, ClientePersist>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LocadoraNET.API", Version = "v1" });

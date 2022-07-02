@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LocadoraNET.Persistence
 {
-    public class ClientePersist
+    public class ClientePersist : IClientePersist
     {
         private readonly LocadoraNetContext _context;
         public ClientePersist(LocadoraNetContext context)
         {
             _context = context;
+            //_context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public async Task<Cliente[]> GetAllClientes(bool includeLocacao = false)
@@ -25,7 +26,7 @@ namespace LocadoraNET.Persistence
                         .Include(c => c.Locacoes)
                         .ThenInclude(l => l.Filme);
 
-            query.OrderBy(c => c.Id);
+            query = query.AsNoTracking().OrderBy(c => c.Id);
 
             return await query.ToArrayAsync();
         }
@@ -38,7 +39,7 @@ namespace LocadoraNET.Persistence
                         .Include(c => c.Locacoes)
                         .ThenInclude(l => l.Filme);
 
-            query.OrderBy(c => c.Id).Where(c => c.Id == ClienteId);
+            query = query.AsNoTracking().OrderBy(c => c.Id).Where(w => w.Id == ClienteId);
 
             return await query.FirstOrDefaultAsync();
         }

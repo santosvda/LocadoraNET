@@ -17,6 +17,11 @@ namespace LocadoraNET.Persistence.Contexts
             modelBuilder.ApplyConfiguration(new ClienteConfiguration());
             modelBuilder.ApplyConfiguration(new LocacaoConfiguration());
             modelBuilder.ApplyConfiguration(new FilmeConfiguration());
+
+            modelBuilder.Entity<Cliente>()
+                .HasMany(c => c.Locacoes)
+                .WithOne(l => l.Cliente)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
