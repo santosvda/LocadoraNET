@@ -1,14 +1,14 @@
-using LocadoraNET.API.Models;
+using LocadoraNET.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace LocadoraNET.API.Configuration
+namespace LocadoraNET.Persistence.Configuration
 {
      public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Cliente> builder)
         {
-            builder.ToTable("Clientes");
-            builder.HasKey(p => p.ClienteId);
+            builder.ToTable("Cliente");
+            builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Nome).HasMaxLength(200);
             builder.Property(p => p.Cpf).HasMaxLength(11);

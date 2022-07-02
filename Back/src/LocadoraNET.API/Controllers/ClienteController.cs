@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using LocadoraNET.Persistence.Contextos;
+using LocadoraNET.Domain;
 using Microsoft.AspNetCore.Mvc;
-using LocadoraNET.API.Models;
 
 namespace LocadoraNET.API.Controllers
 {
@@ -8,17 +9,17 @@ namespace LocadoraNET.API.Controllers
     [Route("api/[controller]")]
     public class ClienteController : ControllerBase
     {
+        private readonly LocadoraNetContext _context;
 
-        public ClienteController()
+        public ClienteController(LocadoraNetContext context)
         {
+            _context = context;
         }
 
         [HttpGet]
         public IEnumerable<Cliente> Get()
         {
-            return new Cliente[] {
-                new Cliente() {ClienteId = 1}
-            };
+            return _context.Clientes;
         }
     }
 }

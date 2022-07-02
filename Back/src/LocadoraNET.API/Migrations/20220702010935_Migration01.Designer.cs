@@ -3,14 +3,16 @@ using System;
 using LocadoraNET.Persistence.Contextos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LocadoraNET.API.Migrations
 {
     [DbContext(typeof(LocadoraNetContext))]
-    partial class LocadoraNetContextModelSnapshot : ModelSnapshot
+    [Migration("20220702010935_Migration01")]
+    partial class Migration01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
