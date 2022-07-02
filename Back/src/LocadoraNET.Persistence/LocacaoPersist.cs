@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LocadoraNET.Persistence
 {
-    public class LocacaoPersist
+    public class LocacaoPersist : ILocacaoPersist
     {
         private readonly LocadoraNetContext _context;
         public LocacaoPersist(LocadoraNetContext context)
@@ -31,7 +31,7 @@ namespace LocadoraNET.Persistence
             .Include(l => l.Cliente)
             .Include(l => l.Filme);
 
-            query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.ClienteId == ClienteId);
+            query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.Id == ClienteId);
 
             return await query.ToArrayAsync();
         }

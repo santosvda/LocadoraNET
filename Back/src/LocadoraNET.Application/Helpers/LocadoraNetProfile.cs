@@ -9,8 +9,8 @@ namespace LocadoraNET.Application.Helpers
         public LocadoraNetProfile()
         {
             CreateMap<Cliente, ClienteDto>().ReverseMap();
-            CreateMap<Filme, FilmeDto>();
-            CreateMap<Locacao, LocacaoDto>();
+            CreateMap<Filme, FilmeDto>().ReverseMap();
+            CreateMap<Locacao, LocacaoDto>().ReverseMap();
         }
     }
 }

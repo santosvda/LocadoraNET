@@ -46,8 +46,13 @@ namespace LocadoraNET.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IFilmeService, FilmeService>();
+            services.AddScoped<ILocacaoService, LocacaoService>();
+
             services.AddScoped<IGeneralPersist, GeneralPersist>();
             services.AddScoped<IClientePersist, ClientePersist>();
+            services.AddScoped<IFilmePersist, FilmePersist>();
+            services.AddScoped<ILocacaoPersist, LocacaoPersist>();
 
             services.AddSwaggerGen(c =>
             {
