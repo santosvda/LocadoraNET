@@ -1,10 +1,6 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Contexts;
 using LocadoraNET.Persistence.Contracts;
-using Microsoft.EntityFrameworkCore;
 
 namespace LocadoraNET.Persistence
 {
@@ -33,7 +29,7 @@ namespace LocadoraNET.Persistence
         {
             _context.RemoveRange(entityArray);
         }
-        public async Task<bool> SaveChangesAsync<T>(T entity) where T : class
+        public async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync()) > 0;
         }

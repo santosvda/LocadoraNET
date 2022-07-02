@@ -3,9 +3,8 @@ using LocadoraNET.Domain;
 
 namespace LocadoraNET.Persistence.Contracts
 {
-    public interface IClientePersist : IGeneralPersist
+    public interface IClientePersist
     {
-        //Cliente
         Task<Cliente[]> GetAllClientes(bool includeLocacao = false);
         Task<Cliente> GetClienteById(int ClienteId, bool includeLocacao = false);
     }

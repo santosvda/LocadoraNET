@@ -3,9 +3,8 @@ using LocadoraNET.Domain;
 
 namespace LocadoraNET.Persistence.Contracts
 {
-    public interface IFilmePersist : IGeneralPersist
+    public interface IFilmePersist
     {
-        //Filme
         Task<Filme[]> GetAllFilmes(bool includeLocacao = false);
         Task<Filme> GetFilmeById(int FilmeId, bool includeLocacao = false);
     }
