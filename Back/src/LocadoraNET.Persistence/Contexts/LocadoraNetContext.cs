@@ -2,7 +2,7 @@ using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace LocadoraNET.Persistence.Contextos
+namespace LocadoraNET.Persistence.Contexts
 {
     public class LocadoraNetContext : DbContext
     {

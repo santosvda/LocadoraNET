@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using LocadoraNET.Persistence.Contextos;
+using LocadoraNET.Persistence.Contexts;
 
 namespace LocadoraNET.API
 {

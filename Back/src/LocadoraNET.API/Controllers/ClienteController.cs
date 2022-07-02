@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using LocadoraNET.Persistence.Contextos;
 using LocadoraNET.Domain;
+using LocadoraNET.Persistence.Contexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocadoraNET.API.Controllers
