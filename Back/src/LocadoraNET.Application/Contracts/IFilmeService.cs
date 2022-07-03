@@ -1,15 +1,15 @@
 using System.Threading.Tasks;
-using LocadoraNET.Domain;
+using LocadoraNET.Application.Dtos;
 
 namespace LocadoraNET.Application.Contracts
 {
     public interface IFilmeService
     {
-        Task<Filme> AddFilme(Filme model);
-        Task<Filme> UpdateFilme(int FilmeId, Filme model);
+        Task<FilmeDto> AddFilme(FilmeDto model);
+        Task<FilmeDto> UpdateFilme(int FilmeId, FilmeDto model);
         Task<bool> DeleteFilme(int FilmeId);
 
-        Task<Filme[]> GetAllFilmes(bool includeLocacao = false);
-        Task<Filme> GetFilmeById(int FilmeId, bool includeLocacao = false);
+        Task<FilmeDto[]> GetAllFilmes(bool includeLocacao = false);
+        Task<FilmeDto> GetFilmeById(int FilmeId, bool includeLocacao = false);
     }
 }

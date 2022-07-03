@@ -6,7 +6,7 @@ namespace LocadoraNET.Application.Dtos
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Field {0} is required"),
-        StringLength(1, MinimumLength = 100, ErrorMessage = "Field {0} length must be between 1 and 100")]    
+        StringLength(100, MinimumLength = 1, ErrorMessage = "Field {0} length must be between 1 and 100")]    
         public string Titulo { get; set; }
         [Range (1, 120, ErrorMessage = "{0} must be between 1 ans 120")]
         public int ClassificacaoIndicativa { get; set; }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LocadoraNET.Persistence
 {
-    public class FilmePersist
+    public class FilmePersist : IFilmePersist
     {
         private readonly LocadoraNetContext _context;
         public FilmePersist(LocadoraNetContext context)

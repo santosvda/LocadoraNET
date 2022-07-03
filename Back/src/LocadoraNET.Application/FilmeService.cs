@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using LocadoraNET.Application.Contracts;
+using LocadoraNET.Application.Dtos;
 using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Contracts;
 
@@ -9,23 +11,27 @@ namespace LocadoraNET.Application
     public class FilmeService : IFilmeService
     {
         private readonly IGeneralPersist _generalPersist;
-        private readonly IFilmePersist _filmePersist;
+        private readonly IFilmePersist _FilmePersist;
+        private readonly IMapper _mapper;
 
-        public FilmeService(IGeneralPersist generalPersist, IFilmePersist filmePersist)
+        public FilmeService(IGeneralPersist generalPersist, IFilmePersist FilmePersist, IMapper mapper)
         {
             _generalPersist = generalPersist;
-            _filmePersist = filmePersist;
+            _FilmePersist = FilmePersist;
+            _mapper = mapper;
         }
-        public async Task<Filme> AddFilme(Filme model)
+        public async Task<FilmeDto> AddFilme(FilmeDto model)
         {
             try
             {
-                _generalPersist.Add<Filme>(model);
+                var Filme = _mapper.Map<Filme>(model);
+                _generalPersist.Add<Filme>(Filme);
 
-                if(await _generalPersist.SaveChangesAsync())
-                    return model;
-
-                return null;
+                if(!await _generalPersist.SaveChangesAsync())
+                    return null;
+                    
+                var result = await _FilmePersist.GetFilmeById(Filme.Id);
+                return _mapper.Map<FilmeDto>(result);
             }
             catch (Exception ex)
             {
@@ -33,22 +39,23 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Filme> UpdateFilme(int FilmeId, Filme model)
+        public async Task<FilmeDto> UpdateFilme(int FilmeId, FilmeDto model)
         {
             try
             {
-                var filme = await _filmePersist.GetFilmeById(FilmeId);
-                
-                if(filme == null) return null;
+                var Filme = await _FilmePersist.GetFilmeById(FilmeId);
+                if(Filme == null) return null;
 
-                model.Id = filme.Id;
+                model.Id = Filme.Id;
+                _mapper.Map(model, Filme);
+                _generalPersist.Update<Filme>(Filme);
 
-                _generalPersist.Update(model);
+                if(!await _generalPersist.SaveChangesAsync())
+                    return null;
+                    
+                var result = await _FilmePersist.GetFilmeById(Filme.Id);
+                return _mapper.Map<FilmeDto>(result);
 
-                if(await _generalPersist.SaveChangesAsync())
-                    return await _filmePersist.GetFilmeById(model.Id);
-
-                return null;
             }
             catch (Exception ex)
             {
@@ -60,11 +67,11 @@ namespace LocadoraNET.Application
         {
             try
             {
-                var filme = await _filmePersist.GetFilmeById(FilmeId);
+                var Filme = await _FilmePersist.GetFilmeById(FilmeId);
                 
-                if(filme == null) throw new Exception("'Filme' for delete not found!");
+                if(Filme == null) throw new Exception("'Filme' for delete not found!");
 
-                _generalPersist.Delete<Filme>(filme);
+                _generalPersist.Delete<Filme>(Filme);
 
                 return await _generalPersist.SaveChangesAsync();
             }
@@ -74,14 +81,14 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Filme[]> GetAllFilmes(bool includeLocacao = false)
+        public async Task<FilmeDto[]> GetAllFilmes(bool includeLocacao = false)
         {
             try
             {
-                var filmes = await _filmePersist.GetAllFilmes();
-                if(filmes == null) return null;
+                var Filmes = await _FilmePersist.GetAllFilmes();
+                if(Filmes == null) return null;
 
-                return filmes;
+                return _mapper.Map<FilmeDto[]>(Filmes);
             }
             catch (Exception ex)
             {
@@ -89,14 +96,14 @@ namespace LocadoraNET.Application
             }
         }
 
-        public async Task<Filme> GetFilmeById(int FilmeId, bool includeLocacao = false)
+        public async Task<FilmeDto> GetFilmeById(int FilmeId, bool includeLocacao = false)
         {
             try
             {
-                var filme = await _filmePersist.GetFilmeById(FilmeId);
-                if(filme == null) return null;
+                var Filme = await _FilmePersist.GetFilmeById(FilmeId);
+                if(Filme == null) return null;
 
-                return filme;
+                return _mapper.Map<FilmeDto>(Filme);
             }
             catch (Exception ex)
             {
