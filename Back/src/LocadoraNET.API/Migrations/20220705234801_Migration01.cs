@@ -71,15 +71,14 @@ namespace LocadoraNET.API.Migrations
                         column: x => x.FilmeId,
                         principalTable: "Filme",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cliente_Cpf",
                 table: "Cliente",
-                column: "Cpf",
-                unique: true);
+                column: "Cpf");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cliente_Nome",

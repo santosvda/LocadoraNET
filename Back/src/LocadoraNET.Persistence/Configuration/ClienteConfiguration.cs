@@ -13,7 +13,7 @@ namespace LocadoraNET.Persistence.Configuration
             builder.Property(p => p.Nome).HasMaxLength(200);
             builder.Property(p => p.Cpf).HasMaxLength(11);
 
-            builder.HasIndex(p => p.Cpf).IsUnique(true);
+            builder.HasIndex(p => p.Cpf).IsUnique(false);
             builder.HasIndex(p => p.Nome).IsUnique(false);
         }
     }   

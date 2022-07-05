@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocadoraNET.API.Migrations
 {
     [DbContext(typeof(LocadoraNetContext))]
-    [Migration("20220702034852_Migration01")]
+    [Migration("20220705234801_Migration01")]
     partial class Migration01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,7 @@ namespace LocadoraNET.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Cpf")
-                        .IsUnique();
+                    b.HasIndex("Cpf");
 
                     b.HasIndex("Nome");
 
@@ -107,7 +106,8 @@ namespace LocadoraNET.API.Migrations
 
                     b.HasOne("LocadoraNET.Domain.Filme", "Filme")
                         .WithMany("Locacoes")
-                        .HasForeignKey("FilmeId");
+                        .HasForeignKey("FilmeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Cliente");
 

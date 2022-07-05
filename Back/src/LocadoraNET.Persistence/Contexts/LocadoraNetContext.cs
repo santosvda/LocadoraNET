@@ -22,6 +22,10 @@ namespace LocadoraNET.Persistence.Contexts
                 .HasMany(c => c.Locacoes)
                 .WithOne(l => l.Cliente)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Filme>()
+                .HasMany(c => c.Locacoes)
+                .WithOne(l => l.Filme)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

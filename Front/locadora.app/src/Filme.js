@@ -1,32 +1,34 @@
 
-import { Button, DatePicker, Form, Input, Table, Card, Space, message, Skeleton } from 'antd';
+import { Button, Form, Input, Table, Card, Space, message, Skeleton, InputNumber } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment'
 
 import api from "./services/api";
 
-function Cliente() {
-    const [clientes, setClientes] = useState();
-    const [editable, setEditable] = useState({ editable: false, id: 0, nome: '' });
+function Filme() {
+    const [filmes, setFilmes] = useState();
+    const [editable, setEditable] = useState({ editable: false, id: 0, titulo: '' });
     const [loading, setLoading] = useState(true);
     const [form] = Form.useForm()
 
     const columns = [
         {
-            title: 'Nome',
-            dataIndex: 'nome',
-            width: '30%',
+            title: 'Título',
+            dataIndex: 'titulo',
+            width: '50%',
         },
         {
-            title: 'CPF',
-            dataIndex: 'cpf',
-            sorter: (a, b) => a.cpf - b.cpf,
+            title: 'Classificação Indicativa',
+            dataIndex: 'classificacaoIndicativa',
+            sorter: (a, b) => a.classificacaoIndicativa - b.classificacaoIndicativa,
+            width: '25%',
         },
         {
-            title: 'Data de Nascimento',
-            dataIndex: 'dataNascimento',
-            width: '40%',
+            title: 'Lançamento',
+            dataIndex: 'lancamento',
+            width: '25%',
+            sorter: (a, b) => a.lancamento - b.lancamento,
         },
         {
             title: 'Ações',
@@ -35,29 +37,28 @@ function Cliente() {
                 <Space size="middle">
                     <a href='#' onClick={() => {
                         setEditable(
-                            { editable: true, id: record.id, nome: record.nome }
+                            { editable: true, id: record.id, titulo: record.titulo }
                         )
                         form.setFieldsValue({
-                            nome: record.nome,
-                            cpf: record.cpf,
-                            dataNascimento: moment(record.dataNascimento, "DD/MM/YYYY h:mm:ss")
+                            titulo: record.titulo,
+                            classificacaoIndicativa: record.classificacaoIndicativa,
+                            lancamento: record.lancamento
                         })
                     }}>Editar</a>
-                    <a href='#' onClick={() => removerCliente(record.id)}>Remover</a>
+                    <a href='#' onClick={() => removerFilme(record.id)}>Remover</a>
                 </Space>
             ),
         },
     ];
 
-    function getClientes() {
+    function getFilmes() {
         setLoading(true)
         api
-            .get("/cliente")
+            .get("/filme")
             .then((response) => {
-                setClientes(response.data.map(d => ({
+                setFilmes(response.data.map(d => ({
                     ...d,
                     key: d.id,
-                    dataNascimento: moment(d.dataNascimento, "DD/MM/YYYY").format('DD/MM/YYYY')
                 })))
             })
             .catch((err) => {
@@ -66,16 +67,15 @@ function Cliente() {
             .finally(() => setLoading(false));
     }
     useEffect(() => {
-        getClientes()
+        getFilmes()
     }, []);
     function onFinish(values) {
         if (!editable.editable) {
             api
-                .post("/cliente", { nome: values.nome, cpf: values.cpf, dataNascimento: moment(values.dataNascimento).format("DD/MM/YYYY") })
+                .post("/filme", { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: values.lancamento })
                 .then((response) => {
-                    message.success('Cliente cadastrado com sucesso!')
-                    cancelarEdicao()
-                    getClientes()
+                    message.success('Filme cadastrado com sucesso!')
+                    getFilmes()
                 })
                 .catch((err) => {
                     console.log(err)
@@ -83,10 +83,11 @@ function Cliente() {
                 });
         } else {
             api
-                .put(`/cliente/${editable.id}`, { nome: values.nome, cpf: values.cpf, dataNascimento: moment(values.dataNascimento).format("DD/MM/YYYY") })
+                .put(`/filme/${editable.id}`, { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: values.lancamento })
                 .then((response) => {
-                    message.success('Cliente editado com sucesso!')
-                    getClientes()
+                    message.success('Filme editado com sucesso!')
+                    cancelarEdicao()
+                    getFilmes()
                 })
                 .catch((err) => {
                     console.log(err)
@@ -94,12 +95,12 @@ function Cliente() {
                 });
         }
     };
-    function removerCliente(id){
+    function removerFilme(id){
         api
-            .delete(`/cliente/${id}`)
+            .delete(`filme/${id}`)
             .then((response) => {
-                message.success('Cliente removido com sucesso!')
-                getClientes()
+                message.success('Filme removido com sucesso!')
+                getFilmes()
             })
             .catch((err) => {
                 console.log(err)
@@ -110,11 +111,11 @@ function Cliente() {
         console.log('Failed:', errorInfo);
     };
     function cancelarEdicao() {
-        setEditable({ editable: false, id: 0, nome: '' })
+        setEditable({ editable: false, id: 0, titulo: '' })
         form.setFieldsValue({
-            nome: '',
-            cpf: '',
-            dataNascimento: moment()
+            titulo: '',
+            classificacaoIndicativa: '',
+            lancamento: ''
         })
     }
 
@@ -123,7 +124,7 @@ function Cliente() {
         <>
             <h1>
                 {
-                    editable.editable ? `Editando ${editable.nome}-Cód: ${editable.id}` : 'Cadastro de Cliente'
+                    editable.editable ? `Editando ${editable.titulo}-Cód: ${editable.id}` : 'Cadastro de Filme'
                 }
             </h1>
             <Skeleton active loading={loading}>
@@ -131,39 +132,38 @@ function Cliente() {
                     form={form}
                     name="basic"
                     labelCol={{ span: 4 }}
-                    initialValues={{ nome: '', cpf: '', dataNascimento: moment() }}
+                    initialValues={{ titulo: '', classificacaoIndicativa: '', lancamento: '' }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
                     <Form.Item
-                        label="Nome"
-                        name="nome"
+                        label="Título"
+                        name="titulo"
                         rules={[
                             { required: true, message: 'O campo é obrigatório' },
-                            { min: 3, message: 'Nome deve conter ao menos 3 caracteres' },
+                            { min: 3, message: 'Título deve conter ao menos 3 caracteres' },
                         ]}
                     >
-                        <Input maxLength={200} />
+                        <Input maxLength={100} />
                     </Form.Item>
 
                     <Form.Item
-                        label="CPF"
-                        name="cpf"
+                        label="Classificação Indicativa"
+                        name="classificacaoIndicativa"
                         rules={[
                             { required: true, message: 'O campo é obrigatório' },
-                            { min: 11, message: 'CPF deve conter 11 caracteres' },
                         ]}
                     >
-                        <Input maxLength={11} />
+                        <InputNumber max={120} />
                     </Form.Item>
 
                     <Form.Item
-                        label="Data de Nascimento"
-                        name="dataNascimento"
+                        label="Lançamento"
+                        name="lancamento"
                         rules={[{ required: true, message: 'O campo é obrigatório' }]}
                     >
-                        <DatePicker format="DD/MM/YYYY" />
+                        <InputNumber min={1800} max={2500} />
                     </Form.Item>
 
                     <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
@@ -179,10 +179,10 @@ function Cliente() {
                     </Form.Item>
                 </Form>
                 <Card>
-                    <Button onClick={getClientes} style={{ marginBottom: '10px' }} type="primary" shape="round" icon={<DownloadOutlined />}>
+                    <Button onClick={getFilmes} style={{ marginBottom: '10px' }} type="primary" shape="round" icon={<DownloadOutlined />}>
                         Atualizar
                     </Button>
-                    <Table scroll columns={columns} dataSource={clientes} />
+                    <Table scroll columns={columns} dataSource={filmes} />
                 </Card>
             </Skeleton>
         </>
@@ -191,4 +191,4 @@ function Cliente() {
     );
 }
 
-export default Cliente;
+export default Filme;

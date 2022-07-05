@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 import Cliente from './Cliente'
+import Filme from './Filme'
 const { Header, Sider, Content } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -78,6 +79,7 @@ function App() {
           >
             <Routes>
               <Route path="cliente" element={<Cliente />} />
+              <Route path="filme" element={<Filme />} />
             </Routes>
 
           </Content>

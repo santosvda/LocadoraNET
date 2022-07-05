@@ -36,8 +36,7 @@ namespace LocadoraNET.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Cpf")
-                        .IsUnique();
+                    b.HasIndex("Cpf");
 
                     b.HasIndex("Nome");
 
@@ -105,7 +104,8 @@ namespace LocadoraNET.API.Migrations
 
                     b.HasOne("LocadoraNET.Domain.Filme", "Filme")
                         .WithMany("Locacoes")
-                        .HasForeignKey("FilmeId");
+                        .HasForeignKey("FilmeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Cliente");
 
