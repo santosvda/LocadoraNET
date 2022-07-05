@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LocadoraNET.Application.Contracts;
 using LocadoraNET.Application.Dtos;
+using LocadoraNET.Application.Helpers;
 using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Contracts;
 
@@ -24,7 +25,10 @@ namespace LocadoraNET.Application
         {
             try
             {
+                var data = Utils.StringToDate(model.DataNascimento);
+
                 var cliente = _mapper.Map<Cliente>(model);
+                cliente.DataNascimento = data;
                 _generalPersist.Add<Cliente>(cliente);
 
                 if(!await _generalPersist.SaveChangesAsync())
@@ -46,8 +50,10 @@ namespace LocadoraNET.Application
                 var cliente = await _clientePersist.GetClienteById(clienteId);
                 if(cliente == null) return null;
 
+                var data = Utils.StringToDate(model.DataNascimento);
                 model.Id = cliente.Id;
                 _mapper.Map(model, cliente);
+                cliente.DataNascimento = data;
                 _generalPersist.Update<Cliente>(cliente);
 
                 if(!await _generalPersist.SaveChangesAsync())
