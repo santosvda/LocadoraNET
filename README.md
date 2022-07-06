@@ -42,5 +42,3 @@ npm start
 ```
 
 **Have fun!**
-
-   [fakestoreapi]: <https://fakestoreapi.com/docs>
