@@ -11,5 +11,6 @@ namespace LocadoraNET.Application.Contracts
 
         Task<FilmeDto[]> GetAllFilmes(bool includeLocacao = false);
         Task<FilmeDto> GetFilmeById(int FilmeId, bool includeLocacao = false);
+        Task<ImportDto> ImportCSV(ImportDto model);
     }
 }

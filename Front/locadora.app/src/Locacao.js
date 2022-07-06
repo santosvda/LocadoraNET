@@ -182,7 +182,7 @@ function Locacao() {
     function atualizarDataDevolucao() {
         const { filmeId, dataLocacao } = form.getFieldsValue()
         const filme = filmes.find((f) => f.id === filmeId)
-        if (+filme.lancamento >= +moment().format('YYYY')) {
+        if (filme.lancamento) {
             form.setFieldsValue({ dataDevolucao: moment(dataLocacao).add(2, 'days') })
             setLancamento(true)
         }

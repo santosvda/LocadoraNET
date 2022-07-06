@@ -1,5 +1,5 @@
 
-import { Button, Form, Input, Table, Card, Space, message, Skeleton, InputNumber, Col, Row, Upload } from 'antd';
+import { Button, Form, Input, Table, Card, Space, message, Skeleton, InputNumber, Col, Row, Upload, Switch } from 'antd';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 
@@ -7,7 +7,7 @@ import api from "./services/api";
 
 function Filme() {
     const [filmes, setFilmes] = useState();
-    const [editable, setEditable] = useState({ editable: false, id: 0, titulo: '' });
+    const [editable, setEditable] = useState({ editable: false, id: 0, titulo: '', checked: false });
     const [loading, setLoading] = useState(true);
     const [form] = Form.useForm()
 
@@ -25,9 +25,8 @@ function Filme() {
         },
         {
             title: 'Lançamento',
-            dataIndex: 'lancamento',
+            dataIndex: 'lancamentoLabel',
             width: '25%',
-            sorter: (a, b) => a.lancamento - b.lancamento,
         },
         {
             title: 'Ações',
@@ -36,7 +35,7 @@ function Filme() {
                 <Space size="middle">
                     <a href='#' onClick={() => {
                         setEditable(
-                            { editable: true, id: record.id, titulo: record.titulo }
+                            { editable: true, id: record.id, titulo: record.titulo, checked: record.lancamento }
                         )
                         form.setFieldsValue({
                             titulo: record.titulo,
@@ -51,6 +50,7 @@ function Filme() {
     ];
 
     function getFilmes() {
+        cancelarEdicao()
         setLoading(true)
         api
             .get("/filme")
@@ -58,6 +58,7 @@ function Filme() {
                 setFilmes(response.data.map(d => ({
                     ...d,
                     key: d.id,
+                    lancamentoLabel: +d.lancamento === 1 ? 'Sim' : 'Não',
                 })))
             })
             .catch((err) => {
@@ -69,9 +70,10 @@ function Filme() {
         getFilmes()
     }, []);
     function onFinish(values) {
+        console.log(values)
         if (!editable.editable) {
             api
-                .post("/filme", { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: values.lancamento })
+                .post("/filme", { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: +values.lancamento })
                 .then((response) => {
                     message.success('Filme cadastrado com sucesso!')
                     getFilmes()
@@ -82,7 +84,7 @@ function Filme() {
                 });
         } else {
             api
-                .put(`/filme/${editable.id}`, { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: values.lancamento })
+                .put(`/filme/${editable.id}`, { titulo: values.titulo, classificacaoIndicativa: values.classificacaoIndicativa, lancamento: +values.lancamento })
                 .then((response) => {
                     message.success('Filme editado com sucesso!')
                     cancelarEdicao()
@@ -110,14 +112,18 @@ function Filme() {
         console.log('Failed:', errorInfo);
     };
     function cancelarEdicao() {
-        setEditable({ editable: false, id: 0, titulo: '' })
+        setEditable({ editable: false, id: 0, titulo: '', checked: false })
         form.setFieldsValue({
             titulo: '',
             classificacaoIndicativa: '',
-            lancamento: ''
+            lancamento: false
         })
     }
     const [fileList, setFileList] = useState([]);
+    const [base64, setBase64] = useState(null);
+    // useEffect(() => {
+    //     console.log('base64', base64)
+    // }, base64);
 
     const props = {
         multi: false,
@@ -128,19 +134,42 @@ function Filme() {
 
         onChange(info) {
             let fileList = [info.file];
-            fileList.forEach(function (file, index) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    file.base64 = e.target.result;
-                };
-                reader.readAsDataURL(file.originFileObj);
-            });
-            console.log('fileList', fileList[0])
-            if (fileList[0].type !== 'text/csv')
-                message.error('Arquivo deve ser do tipo .csv')
-
-
+            new Promise((resolve, reject) => {
+                fileList.forEach(function (file, index) {
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        file.base64 = e.target.result;
+                        setBase64(e.target.result)
+                    };
+                    reader.readAsDataURL(file.originFileObj);
+                    resolve()
+                })
+            }).then(() => {
+                console.log('base64', base64)
+                if (fileList[0].type === 'text/csv') {
+                    api
+                        .post("/filme/import", { File64: base64 })
+                        .then((response) => {
+                            console.log(response)
+                            if (response.data.addError)
+                                message.warning('Todos os Filmes ja estão importados.')
+                            else if (response.data.keyError)
+                                message.warning('Alguns Filmes não foram importados, devido a coluna Id duplicada.')
+                            else
+                                message.success('Importado com sucesso!')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            message.error('Ocorreu um erro!')
+                        }).finally(() => {
+                            getFilmes()
+                        })
+                }
+                else
+                    message.error('Arquivo deve ser do tipo .csv')
+            })
             setFileList([])
+
         },
         fileList
     };
@@ -157,7 +186,7 @@ function Filme() {
                     form={form}
                     name="basic"
                     labelCol={{ span: 4 }}
-                    initialValues={{ titulo: '', classificacaoIndicativa: '', lancamento: '' }}
+                    initialValues={{ titulo: '', classificacaoIndicativa: '', lancamento: false }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
@@ -180,7 +209,7 @@ function Filme() {
                             { required: true, message: 'O campo é obrigatório' },
                         ]}
                     >
-                        <InputNumber max={120} />
+                        <InputNumber min={0} max={120} />
                     </Form.Item>
 
                     <Form.Item
@@ -188,7 +217,7 @@ function Filme() {
                         name="lancamento"
                         rules={[{ required: true, message: 'O campo é obrigatório' }]}
                     >
-                        <InputNumber min={1800} max={2500} />
+                        <Switch />
                     </Form.Item>
 
                     <Form.Item wrapperCol={{ offset: 4, span: 16 }}>

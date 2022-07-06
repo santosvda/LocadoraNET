@@ -10,7 +10,7 @@ namespace LocadoraNET.Application.Dtos
         public string Titulo { get; set; }
         [Range (1, 120, ErrorMessage = "{0} must be between 1 ans 120")]
         public int ClassificacaoIndicativa { get; set; }
-        [Range (1800, 2050, ErrorMessage = "{0} must be between 1800 ans 2050")]
+        [Range (0, 1, ErrorMessage = "{0} must be 0 or 1")]
         public int Lancamento { get; set; }
     }
 }

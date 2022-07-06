@@ -1,10 +1,13 @@
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using LocadoraNET.Application.Contracts;
 using LocadoraNET.Application.Dtos;
 using LocadoraNET.Domain;
 using LocadoraNET.Persistence.Contracts;
+using Microsoft.VisualBasic.FileIO;
 
 namespace LocadoraNET.Application
 {
@@ -104,6 +107,67 @@ namespace LocadoraNET.Application
                 if(Filme == null) return null;
 
                 return _mapper.Map<FilmeDto>(Filme);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ImportDto> ImportCSV(ImportDto model)
+        {
+            try
+            {
+                Regex regex=new Regex(@"^[\w/\:.-]+;base64,");
+                string base64Str = regex.Replace(model.File64, string.Empty);
+                byte[] fileBytes = Convert.FromBase64String(base64Str);
+                string strFileData = System.Text.Encoding.UTF8.GetString(fileBytes, 0, fileBytes.Length);
+                Stream stream = new MemoryStream(fileBytes);
+
+                var result = new ImportDto() { KeyError = false };
+
+                using (TextFieldParser parser = new TextFieldParser(stream))
+                {
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.TextFieldType = FieldType.Delimited;
+                    parser.SetDelimiters(";");
+                    bool firstRow = true;
+                    bool isAdd = false;
+                    while (!parser.EndOfData)
+                    {
+                        string[] row = parser.ReadFields();
+                        if (firstRow)
+                        {
+                            firstRow = false;
+                            continue;
+                        }
+
+                        //Processing row
+                        var filmeCsv = new FilmeDto() { 
+                            Id = Convert.ToInt32(row[0]),
+                            Titulo = row[1],
+                            ClassificacaoIndicativa = Convert.ToInt32(row[2]),
+                            Lancamento = Convert.ToInt32(row[3])
+                        };
+
+                        var validate = await _FilmePersist.GetFilmeById(filmeCsv.Id);
+                        if (validate != null)
+                        {
+                            result.KeyError = true;
+                            continue;
+                        }
+
+                        var filme = _mapper.Map<Filme>(filmeCsv);
+                        _generalPersist.Add<Filme>(filme);
+                        isAdd = true;
+                    }
+                    if (!isAdd)
+                        result.AddError = true;
+                    else if (!await _generalPersist.SaveChangesAsync())
+                       throw new Exception("Falha ao salvar");
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

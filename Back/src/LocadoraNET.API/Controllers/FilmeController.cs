@@ -103,5 +103,21 @@ namespace LocadoraNET.API.Controllers
                 throw;
             }
         }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportarCSV(ImportDto model)
+        {
+            try
+            {
+                var result = await _filmeService.ImportCSV(model);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                throw;
+            }
+        }
     }
 }
