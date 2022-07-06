@@ -43,7 +43,7 @@ function Cliente() {
                             dataNascimento: moment(record.dataNascimento, "DD/MM/YYYY")
                         })
                     }}>Editar</a>
-                    <a href='#' onClick={() => removerCliente(record.id)}>Remover</a>
+                    <Button type="text" style={{ color: '#ff4d4f' }} onClick={() => removerCliente(record.id)}>Remover</Button>
                 </Space>
             ),
         },

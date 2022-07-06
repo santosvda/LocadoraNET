@@ -43,7 +43,7 @@ function Filme() {
                             lancamento: record.lancamento
                         })
                     }}>Editar</a>
-                    <a href='#' onClick={() => removerFilme(record.id)}>Remover</a>
+                    <Button type="text" style={{ color: '#ff4d4f' }} onClick={() => removerFilme(record.id)}>Remover</Button>
                 </Space>
             ),
         },
@@ -134,6 +134,7 @@ function Filme() {
 
         onChange(info) {
             let fileList = [info.file];
+            console.log('fileList', fileList)
             new Promise((resolve, reject) => {
                 fileList.forEach(function (file, index) {
                     let reader = new FileReader();
@@ -233,7 +234,7 @@ function Filme() {
                     </Form.Item>
                 </Form>
                 <Card>
-                    <Row gutter={0}>
+                    <Row gutter={16}>
                         <Col span={3}>
                             <Button onClick={getFilmes} style={{ marginBottom: '10px' }} type="primary" shape="round" icon={<DownloadOutlined />}>
                                 Atualizar
