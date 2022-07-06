@@ -12,8 +12,10 @@ LocadoraNET é um projeto de estudo com o objetivo de simular um sistema de gest
 
 ## Endpoints
 - API: http://localhost:5000/api
-- Swagger: http://localhost:5000/swagger
 - React-App: http://localhost:3000/
+- Swagger: http://localhost:5000/swagger
+
+**Obs: Postman Collections disponíveis em: Util/Postman Collections**
 
 ## Necessário
 Tenha certeza que você possui instalado:

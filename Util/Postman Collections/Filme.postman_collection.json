@@ -1,0 +1,168 @@
+{
+	"info": {
+		"_postman_id": "abde0a05-a26d-48cc-9c41-92a4f36eb4a6",
+		"name": "Filme",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10411774"
+	},
+	"item": [
+		{
+			"name": "Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titulo\": \"Filme 2\",\r\n  \"classificacaoIndicativa\": 10,\r\n  \"lancamento\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Import",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"file64\": \"data:text/csv;base64,77u/SWQ7VGl0dWxvO0NsYXNzaWZpY2FjYW9JbmRpY2F0aXZhO0xhbmNhbWVudG8NCjE7TyBqb2dvIGRhIGltaXRhw6fDo287MTI7MA0KMjtBIHRlb3JpYSBkZSB0dWRvOzEwOzANCjM7UGlyYXRhcyBkbyBDYXJpYmU7MTQ7MA0KNDtOw6NvIG9saGUgcGFyYSBjaW1hOzE4OzENCjU7VmluZ2Fuw6dhIGUgQ2FzdGlnbzsxODswDQo2O08gRXNxdWFkcsOjbyBTdWljaWRhOzE2OzANCjc7RXRlcm5vczsxNDsxDQo4O1NoYW5nLUNoaSBlIGEgTGVuZGEgZG9zIERleiBBbsOpaXM7MTA7MQ0KOTtIb21lbS1BcmFuaGE6IFNlbSBWb2x0YSBwYXJhIENhc2E7MTI7MQ0KMTA7VW1hIG1lbnRlIGJyaWxoYW50ZTsxMDswDQo=\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/import",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titulo\": \"Filme 3\",\r\n  \"classificacaoIndicativa\": 10,\r\n  \"lancamento\": 2012\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Felipe 2\",\r\n  \"cpf\": \"654654\",\r\n  \"dataNascimento\": \"2022-07-02T02:55:15.137Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000/api/filme"
+		}
+	]
+}
