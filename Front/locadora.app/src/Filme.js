@@ -1,8 +1,7 @@
 
-import { Button, Form, Input, Table, Card, Space, message, Skeleton, InputNumber } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Table, Card, Space, message, Skeleton, InputNumber, Col, Row, Upload } from 'antd';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import moment from 'moment'
 
 import api from "./services/api";
 
@@ -95,7 +94,7 @@ function Filme() {
                 });
         }
     };
-    function removerFilme(id){
+    function removerFilme(id) {
         api
             .delete(`filme/${id}`)
             .then((response) => {
@@ -118,7 +117,33 @@ function Filme() {
             lancamento: ''
         })
     }
+    const [fileList, setFileList] = useState([]);
 
+    const props = {
+        multi: false,
+        accept: '.csv',
+        customRequest: (info) => {
+            console.log('info', info)
+        },
+
+        onChange(info) {
+            let fileList = [info.file];
+            fileList.forEach(function (file, index) {
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    file.base64 = e.target.result;
+                };
+                reader.readAsDataURL(file.originFileObj);
+            });
+            console.log('fileList', fileList[0])
+            if (fileList[0].type !== 'text/csv')
+                message.error('Arquivo deve ser do tipo .csv')
+
+
+            setFileList([])
+        },
+        fileList
+    };
 
     return (
         <>
@@ -179,9 +204,18 @@ function Filme() {
                     </Form.Item>
                 </Form>
                 <Card>
-                    <Button onClick={getFilmes} style={{ marginBottom: '10px' }} type="primary" shape="round" icon={<DownloadOutlined />}>
-                        Atualizar
-                    </Button>
+                    <Row gutter={0}>
+                        <Col span={3}>
+                            <Button onClick={getFilmes} style={{ marginBottom: '10px' }} type="primary" shape="round" icon={<DownloadOutlined />}>
+                                Atualizar
+                            </Button>
+                        </Col>
+                        <Col span={3}>
+                            <Upload {...props}>
+                                <Button icon={<UploadOutlined />}>Importar Filmes</Button>
+                            </Upload>
+                        </Col>
+                    </Row>
                     <Table scroll columns={columns} dataSource={filmes} />
                 </Card>
             </Skeleton>

@@ -40,7 +40,7 @@ function Cliente() {
                         form.setFieldsValue({
                             nome: record.nome,
                             cpf: record.cpf,
-                            dataNascimento: moment(record.dataNascimento, "DD/MM/YYYY h:mm:ss")
+                            dataNascimento: moment(record.dataNascimento, "DD/MM/YYYY")
                         })
                     }}>Editar</a>
                     <a href='#' onClick={() => removerCliente(record.id)}>Remover</a>
