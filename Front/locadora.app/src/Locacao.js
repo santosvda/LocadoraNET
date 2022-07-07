@@ -46,7 +46,7 @@ function Locacao() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a type="text" onClick={() => {
+                    <a href="#" onClick={() => {
                         setEditable(
                             { editable: true, id: record.id }
                         )
