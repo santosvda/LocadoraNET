@@ -6,6 +6,7 @@ import {
   TeamOutlined,
   VideoCameraOutlined,
   FormOutlined,
+  HomeOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 
@@ -15,6 +16,7 @@ import './App.css';
 import Cliente from './Cliente'
 import Filme from './Filme'
 import Locacao from './Locacao'
+import Home from './Home'
 const { Header, Sider, Content } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -27,6 +29,11 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
+  getItem(
+    <><span>Home</span><Link to="/" /></>,
+    'Home',
+    <HomeOutlined />,
+  ),
   getItem(
     <><span>Cliente</span><Link to="/cliente" /></>,
     'Cliente',
@@ -82,6 +89,7 @@ function App() {
               <Route path="cliente" element={<Cliente />} />
               <Route path="filme" element={<Filme />} />
               <Route path="locacao" element={<Locacao />} />
+              <Route path="/" element={<Home />} />
             </Routes>
 
           </Content>

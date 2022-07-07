@@ -9,5 +9,6 @@ namespace LocadoraNET.Persistence.Contracts
         Task<Locacao> GetLocacaoById(int LocacaoId);
         Task<Locacao[]> GetAllLocacoesByClienteId(int ClienteId);
         Task<Locacao[]> GetAllLocacoesByFilmeId(int FilmeId);
+        string[] SqlRaw(string sql);
     }
 }

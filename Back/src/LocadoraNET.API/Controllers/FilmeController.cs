@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using LocadoraNET.Application.Contracts;
 using LocadoraNET.Application.Dtos;
-using LocadoraNET.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

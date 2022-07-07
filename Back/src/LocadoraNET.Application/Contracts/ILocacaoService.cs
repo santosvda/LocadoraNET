@@ -13,5 +13,6 @@ namespace LocadoraNET.Application.Contracts
         Task<LocacaoDto> GetLocacaoById(int locacaoId);
         Task<LocacaoDto[]> GetAllLocacoesByClienteId(int ClienteId);
         Task<LocacaoDto[]> GetAllLocacoesByFilmeId(int filmeId);
+        byte[] GerarPlanilha();
     }
 }

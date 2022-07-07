@@ -137,5 +137,28 @@ namespace LocadoraNET.API.Controllers
                 throw;
             }
         }
+        
+        [HttpGet("gerar/planilha")]
+        public FileResult Planilha()
+        {
+            try
+            {
+                const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                HttpContext.Response.ContentType = contentType;
+                HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+
+                var fileContentResult = new FileContentResult(_locacaoService.GerarPlanilha(), contentType)
+                {
+                    FileDownloadName = "File.xlsx"
+                };
+
+                return fileContentResult;
+            }
+            catch
+            {
+                return null;
+                throw;
+            }
+        }
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using LocadoraNET.Domain;
@@ -54,6 +56,26 @@ namespace LocadoraNET.Persistence
             query = query.AsNoTracking().OrderBy(c => c.Id).Where(c => c.Id == LocacaoId);
 
             return await query.FirstOrDefaultAsync();
+        }
+
+        public string[] SqlRaw(string sql)
+        {
+            var aux = new List<string>();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                command.CommandType = CommandType.Text;
+
+                _context.Database.OpenConnection();
+                using (var result = command.ExecuteReader())
+                {
+                    while (result.Read())
+                    {
+                        aux.Add(result[0].ToString());
+                    }
+                }
+            }
+            return aux.ToArray();
         }
     }
 }
